@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from gui_config_loader import ConfigLoader
 from ss_local_launcher import SsLocalLauncher
 from latency_tester import LatencyTester
