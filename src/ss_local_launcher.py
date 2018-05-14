@@ -42,7 +42,7 @@ class SsLocalLauncher:
         with subprocess.Popen(
             ['journalctl', '-f'],
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            encoding='utf-8',
+            encoding='utf-8'
         ) as process:
             for line in iter(process.stdout.readline, ''):
                 if f'ss-local[{self.pid}]' in line:

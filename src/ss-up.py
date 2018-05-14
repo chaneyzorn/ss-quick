@@ -22,7 +22,6 @@ def main(args):
     configs = config_loader.get_server_configs()
 
     if args.fastest:
-        ss_log.info("start connection latency test")
         fastest_config = LatencyTester(configs).start_test()
         fastest_config.local_port = args.local_port
         start_ss_proxy(fastest_config)
