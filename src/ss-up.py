@@ -11,14 +11,14 @@ from logger import ss_log
 def start_ss_proxy(config, args):
     ss_log.info(f"Start ss-local with following config: \n{config}")
     ss_proxy = SsLocalLauncher(config)
-    ss_proxy.start(daemon=args.d)
+    ss_proxy.start(daemon=args.daemon)
 
 
 def main(args):
     config_loader = ConfigLoader(args.config_file)
     configs = config_loader.get_server_configs()
 
-    if args.n:
+    if args.n is not False:
         index = args.n
         if index not in range(len(configs)):
             raise Exception(f"please choose a config from 1-{len(configs)}")
@@ -31,6 +31,8 @@ def main(args):
             return
         fastest_config.local_port = args.local_port
         start_ss_proxy(fastest_config, args)
+    else:
+        ss_log.info("Invalid Arguments.")
 
 
 if __name__ == "__main__":
