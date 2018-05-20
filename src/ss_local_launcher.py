@@ -40,25 +40,25 @@ class SsLocalLauncher:
                     sys.stdout.write(line)
             except KeyboardInterrupt:
                 process.kill()
-                stdout, stderr = process.communicate()
-                if stdout:
-                    sys.stdout.write(stdout)
-                if stderr:
-                    sys.stderr.write(stderr)
+                for line in iter(process.stdout.readline, ''):
+                    sys.stdout.write(line)
             except Exception as e:
                 ss_log.exception(e)
                 process.kill()
                 process.wait()
                 return
+
+            if daemon:
+                process.wait()
+                with self.pid_file.open('rt') as f:
+                    self.pid = f.readline().strip()
+                    ss_log.info(f"ss-local run in background. pid: {self.pid}")
+                    ss_log.info(f"pid file: {self.pid_file}")
+                return
+
             retcode = process.poll()
             if retcode is not None:
-                if retcode == 0 and daemon:
-                    with self.pid_file.open('rt') as f:
-                        self.pid = f.readline().strip()
-                        ss_log.info(f"ss-local run in background. pid: {self.pid}")
-                        ss_log.info(f"pid file: {self.pid_file}")
-                else:
-                    ss_log.info("ss-local exit with code({})".format(retcode))
+                ss_log.info("ss-local exit with code({})".format(retcode))
 
     def get_ss_syslog(self):
         with subprocess.Popen(
