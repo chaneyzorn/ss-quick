@@ -18,7 +18,7 @@ class SsLocalLauncher:
 
         self.pid_file = Path(f'/tmp/ss-local:{uuid.uuid4().hex}.pid')
 
-    def start(self):
+    def start(self, daemon=False):
         cmd = [
             'ss-local',
             '-s', self._s,
@@ -26,9 +26,9 @@ class SsLocalLauncher:
             '-l', self._l,
             '-k', self._k,
             '-m', self._m,
-            '-f', self.pid_file,
             '-v'
         ]
+        cmd += ['-f', self.pid_file] if daemon else []
         with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8') as process:
             try:
                 for line in iter(process.stdout.readline, ''):
@@ -47,4 +47,10 @@ class SsLocalLauncher:
                 return
             retcode = process.poll()
             if retcode is not None:
-                ss_log.info("ss-local exit with code({})".format(retcode))
+                if retcode == 0 and daemon:
+                    with self.pid_file.open('rt') as f:
+                        pid = f.readline().strip()
+                        ss_log.info(f"ss-local run in background. pid: {pid}")
+                        ss_log.info(f"pid file: {self.pid_file}")
+                else:
+                    ss_log.info("ss-local exit with code({})".format(retcode))
