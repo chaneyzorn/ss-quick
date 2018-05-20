@@ -8,10 +8,10 @@ from command_line import arg_parser
 from logger import ss_log
 
 
-def start_ss_proxy(config):
+def start_ss_proxy(config, args):
     ss_log.info(f"Start ss-local with following config: \n{config}")
     ss_proxy = SsLocalLauncher(config)
-    ss_proxy.start()
+    ss_proxy.start(daemon=args.d)
 
 
 def main(args):
@@ -24,13 +24,13 @@ def main(args):
             raise Exception(f"please choose a config from 1-{len(configs)}")
         config = configs[index]
         config.local_port = args.local_port
-        start_ss_proxy(config)
+        start_ss_proxy(config, args)
     elif args.fastest:
         fastest_config = LatencyTester(configs).start_test()
         if not fastest_config:
             return
         fastest_config.local_port = args.local_port
-        start_ss_proxy(fastest_config)
+        start_ss_proxy(fastest_config, args)
 
 
 if __name__ == "__main__":
