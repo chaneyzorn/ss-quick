@@ -28,7 +28,8 @@ class SsLocalLauncher:
             '-k', self._k,
             '-m', self._m,
             '-v'
-        ] + ['-f', self.pid_file] if daemon else []
+        ]
+        cmd += ['-f', self.pid_file] if daemon else []
 
         with subprocess.Popen(
                 cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
