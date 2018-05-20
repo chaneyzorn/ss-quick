@@ -13,7 +13,7 @@ arg_parser.add_argument(
     action='store',
     type=int,
     default=False,
-    help="choose n-th config to start ss-local."
+    help="choose (0-n)th config to start ss-local."
 )
 arg_parser.add_argument(
     '-f', '--fastest',

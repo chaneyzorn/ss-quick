@@ -13,35 +13,40 @@ class LatencyTester:
 
     def start_test(self):
         ss_log.info(">>> Start Connection Latency Test")
-        left_width = max(len(item.remarks) for item in self.server_configs)
-        right_width = max(len(item.server) for item in self.server_configs)
+        width_1 = len(f'[{len(self.server_configs)}]')
+        width_2 = max(len(item.server) for item in self.server_configs)
+
         for index, config in enumerate(self.server_configs):
             with socket(AF_INET, SOCK_STREAM) as s:
-                config_name = f"{config.remarks:<{left_width}} {config.server:>{right_width}}"
                 s.settimeout(3)
                 start = time.time()
+                latency = 0
                 try:
                     s.connect((config.server, int(config.server_port)))
                 except timeout:
-                    ss_log.info(f"{config_name}: timeout")
-                    config.latency = math.inf
+                    status = "timeout"
                 except ConnectionRefusedError:
-                    ss_log.info(f"{config_name}: connection refused")
-                    config.latency = math.inf
+                    status = "connection refused"
                 except gaierror:
-                    ss_log.info(f"{config_name}: server not know")
-                    config.latency = math.inf
+                    status = "server not know"
                 except Exception as e:
                     ss_log.exception(e)
-                    ss_log.info(f"{config_name}: test failed")
-                    config.latency = math.inf
+                    status = "test failed"
                 else:
-                    end = time.time()
-                    ss_log.info(f"{config_name}: {(end-start)*1000:.2f} ms")
-                    config.latency = (end - start) * 1000
+                    status = "success"
+                    latency = (time.time() - start) * 1000
+                config.latency = latency or math.inf
+                config.status = status
+                result = latency and f"{latency:.2f} ms" or status
 
-        self.server_configs.sort(key=lambda item: item.latency)
-        fastest = self.server_configs[0]
+                ss_log.info(f"{'['+str(index)+']':>{width_1}} {result:<18} {config.server:>{width_2}}:{config.remarks}")
+
+        rank = sorted(self.server_configs, key=lambda item: item.latency)
+        fastest = rank[0]
+        if fastest.status != "success":
+            ss_log.info("None of configs is valid")
+            return None
         ss_log.info(f">>> Test Finished, the lowest connection latency is:")
-        ss_log.info(f">>> {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<")
+        index = self.server_configs.index(fastest)
+        ss_log.info(f">>> {'['+str(index)+']'} {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<")
         return fastest

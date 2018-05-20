@@ -21,17 +21,19 @@ def main(args):
     config_loader = ConfigLoader(args.config_file)
     configs = config_loader.get_server_configs()
 
-    if args.fastest:
-        fastest_config = LatencyTester(configs).start_test()
-        fastest_config.local_port = args.local_port
-        start_ss_proxy(fastest_config)
-    elif args.n:
-        index = args.n - 1
+    if args.n:
+        index = args.n
         if index not in range(len(configs)):
             raise Exception(f"please choose a config from 1-{len(configs)}")
         config = configs[index]
         config.local_port = args.local_port
         start_ss_proxy(config)
+    elif args.fastest:
+        fastest_config = LatencyTester(configs).start_test()
+        if not fastest_config:
+            return
+        fastest_config.local_port = args.local_port
+        start_ss_proxy(fastest_config)
 
 
 if __name__ == "__main__":
