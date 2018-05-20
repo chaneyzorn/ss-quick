@@ -3,6 +3,8 @@ import uuid
 import subprocess
 from pathlib import Path
 
+from logger import ss_log
+
 
 class SsLocalLauncher:
 
@@ -16,18 +18,8 @@ class SsLocalLauncher:
 
         self.pid_file = Path(f'/tmp/ss-local:{uuid.uuid4().hex}.pid')
 
-    def __enter__(self):
-        self._start()
-        with self.pid_file.open('rt') as f:
-            self.pid = f.readline().strip()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        subprocess.call(['kill', self.pid])
-        self.pid_file.unlink()
-
-    def _start(self):
-        subprocess.run([
+    def start(self):
+        cmd = [
             'ss-local',
             '-s', self._s,
             '-p', self._p,
@@ -36,14 +28,23 @@ class SsLocalLauncher:
             '-m', self._m,
             '-f', self.pid_file,
             '-v'
-        ], check=True)
-
-    def get_ss_syslog(self):
-        with subprocess.Popen(
-            ['journalctl', '-f'],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            encoding='utf-8'
-        ) as process:
-            for line in iter(process.stdout.readline, ''):
-                if f'ss-local[{self.pid}]' in line:
+        ]
+        with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8') as process:
+            try:
+                for line in iter(process.stdout.readline, ''):
                     sys.stdout.write(line)
+            except KeyboardInterrupt:
+                process.kill()
+                stdout, stderr = process.communicate()
+                if stdout:
+                    sys.stdout.write(stdout)
+                if stderr:
+                    sys.stderr.write(stderr)
+            except Exception as e:
+                ss_log.exception(e)
+                process.kill()
+                process.wait()
+                return
+            retcode = process.poll()
+            if retcode is not None:
+                ss_log.info("ss-local exit with code({})".format(retcode))

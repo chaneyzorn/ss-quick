@@ -10,11 +10,8 @@ from logger import ss_log
 
 def start_ss_proxy(config):
     ss_log.info(f"Start ss-local with following config: \n{config}")
-    try:
-        with SsLocalLauncher(config) as ss_proxy:
-            ss_proxy.get_ss_syslog()
-    except KeyboardInterrupt:
-        ss_log.info("ss-local closed gracefully")
+    ss_proxy = SsLocalLauncher(config)
+    ss_proxy.start()
 
 
 def main(args):
