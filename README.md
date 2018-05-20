@@ -17,6 +17,11 @@ optional arguments:
   -d, --daemon          run in the background.
 ```
 
+
+# BUGS
+
+1. stdout flush. see [issue](https://github.com/shadowsocks/shadowsocks-libev/issues/2048)
+
 # License
 MIT
 
