@@ -17,6 +17,7 @@ class SsLocalLauncher:
         self._m = str(config.method)
 
         self.pid_file = Path(f'/tmp/ss-local:{uuid.uuid4().hex}.pid')
+        self.pid = 0
 
     def start(self, daemon=False):
         cmd = [
@@ -27,10 +28,13 @@ class SsLocalLauncher:
             '-k', self._k,
             '-m', self._m,
             '-v'
-        ]
-        cmd += ['-f', self.pid_file] if daemon else []
-        with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8') as process:
+        ] + ['-f', self.pid_file] if daemon else []
+
+        with subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
+        ) as process:
             try:
+                self.pid = process.pid
                 for line in iter(process.stdout.readline, ''):
                     sys.stdout.write(line)
             except KeyboardInterrupt:
@@ -49,8 +53,18 @@ class SsLocalLauncher:
             if retcode is not None:
                 if retcode == 0 and daemon:
                     with self.pid_file.open('rt') as f:
-                        pid = f.readline().strip()
-                        ss_log.info(f"ss-local run in background. pid: {pid}")
+                        self.pid = f.readline().strip()
+                        ss_log.info(f"ss-local run in background. pid: {self.pid}")
                         ss_log.info(f"pid file: {self.pid_file}")
                 else:
                     ss_log.info("ss-local exit with code({})".format(retcode))
+
+    def get_ss_syslog(self):
+        with subprocess.Popen(
+                ['journalctl', '-f'],
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                universal_newlines=True
+        ) as process:
+            for line in iter(process.stdout.readline, ''):
+                if f'ss-local[{self.pid}]' in line:
+                    sys.stdout.write(line)
