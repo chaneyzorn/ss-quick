@@ -47,17 +47,16 @@ class SsLocalLauncher:
                 process.kill()
                 process.wait()
                 return
+            process.wait()
+            retcode = process.poll()
 
-            if daemon:
-                process.wait()
+            if retcode == 0 and daemon:
                 with self.pid_file.open('rt') as f:
                     self.pid = f.readline().strip()
                     ss_log.info(f"ss-local run in background. pid: {self.pid}")
                     ss_log.info(f"pid file: {self.pid_file}")
                 return
-
-            retcode = process.poll()
-            if retcode is not None:
+            else:
                 ss_log.info("ss-local exit with code({})".format(retcode))
 
     def get_ss_syslog(self):
