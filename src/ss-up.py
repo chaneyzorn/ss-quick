@@ -3,13 +3,13 @@
 from gui_config_loader import ConfigLoader
 from ss_local_launcher import SsLocalLauncher
 from latency_tester import LatencyTester
-from command_line import arg_parser
+from command_line import args
 
 from logger import ss_log
 
 
 def start_ss_proxy(config, args):
-    ss_log.info(f"Start ss-local with following config: \n{config}")
+    ss_log.debug(f"Start ss-local with following config: \n{config}")
     ss_proxy = SsLocalLauncher(config)
     ss_proxy.start(daemon=args.daemon)
 
@@ -22,19 +22,21 @@ def main(args):
         index = args.n
         if index not in range(len(configs)):
             raise Exception(f"please choose a config from 1-{len(configs)}")
-        config = configs[index]
-        config.local_port = args.local_port
-        start_ss_proxy(config, args)
+        config = configs[index - 1]
     elif args.fastest:
-        fastest_config = LatencyTester(configs).start_test()
-        if not fastest_config:
+        config = LatencyTester(configs).get_fastest()
+        if not config:
             return
-        fastest_config.local_port = args.local_port
-        start_ss_proxy(fastest_config, args)
     else:
-        ss_log.info("Invalid Arguments.")
+        ss_log.debug("Invalid Arguments.")
+        return
+
+    config.local_port = args.local_port
+    if args.flags:
+        print(config.to_flags())
+    else:
+        start_ss_proxy(config, args)
 
 
 if __name__ == "__main__":
-    args = arg_parser.parse_args()
     main(args)

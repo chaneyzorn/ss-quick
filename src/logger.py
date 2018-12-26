@@ -1,7 +1,8 @@
-from logging import getLogger, INFO, basicConfig
+from command_line import args
+from logging import getLogger, INFO, DEBUG, basicConfig
 
 basicConfig(
-    level=INFO,
+    level=DEBUG if args.verbose else INFO,
     format='%(asctime)s %(levelname)s: %(message)s',
     datefmt='%m-%d %H:%M:%S'
 )

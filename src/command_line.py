@@ -16,7 +16,7 @@ arg_parser.add_argument(
     help="choose (0-n)th config to start ss-local."
 )
 arg_parser.add_argument(
-    '-f', '--fastest',
+    '--fastest',
     action='store_true',
     default=False,
     help="start ss-local with the fastest one."
@@ -34,8 +34,21 @@ arg_parser.add_argument(
     default=False,
     help="run in the background."
 )
+arg_parser.add_argument(
+    '--flags',
+    action='store_true',
+    default=False,
+    help="only print required flags of ss-local to stdout."
+)
+arg_parser.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    default=False,
+    help="make the operation more talkative."
+)
+
+args = arg_parser.parse_args()
 
 
 if __name__ == "__main__":
-    args = arg_parser.parse_args()
     print(args.__dict__)

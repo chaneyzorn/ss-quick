@@ -53,12 +53,12 @@ class SsLocalLauncher:
             if retcode == 0 and daemon:
                 with self.pid_file.open('rt') as f:
                     self.pid = f.readline().strip()
-                    ss_log.info(f"ss-local run in background. pid: {self.pid}")
-                    ss_log.info(f"pid file: {self.pid_file}")
-                    ss_log.info("use `journalctl -f | grep ss-local` to view the logs on linux")
+                    ss_log.debug(f"ss-local run in background. pid: {self.pid}")
+                    ss_log.debug(f"pid file: {self.pid_file}")
+                    ss_log.debug("use `journalctl -f | grep ss-local` to view the logs on linux")
                 return
             else:
-                ss_log.info("ss-local exit with code({})".format(retcode))
+                ss_log.debug("ss-local exit with code({})".format(retcode))
 
     def get_ss_syslog(self):
         with subprocess.Popen(

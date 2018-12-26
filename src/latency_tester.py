@@ -11,8 +11,11 @@ class LatencyTester:
             raise Exception("server_configs is null")
         self.server_configs = server_configs
 
+    def get_fastest(self):
+        return self.start_test()
+
     def start_test(self):
-        ss_log.info(">>> Start Connection Latency Test")
+        ss_log.debug(">>> Start Connection Latency Test")
         width_1 = len(f'[{len(self.server_configs)}]')
         width_2 = max(len(item.server) for item in self.server_configs)
 
@@ -39,14 +42,14 @@ class LatencyTester:
                 config.status = status
                 result = latency and f"{latency:.2f} ms" or status
 
-                ss_log.info(f"{'['+str(index)+']':>{width_1}} {result:<18} {config.server:>{width_2}}:{config.remarks}")
+                ss_log.debug(f"{'['+str(index)+']':>{width_1}} {result:<18} {config.server:>{width_2}}:{config.remarks}")
 
         rank = sorted(self.server_configs, key=lambda item: item.latency)
         fastest = rank[0]
         if fastest.status != "success":
-            ss_log.info("None of configs is valid")
+            ss_log.debug("None of configs is valid")
             return None
-        ss_log.info(f">>> Test Finished, the lowest connection latency is:")
+        ss_log.debug(f">>> Test Finished, the lowest connection latency is:")
         index = self.server_configs.index(fastest)
-        ss_log.info(f">>> {'['+str(index)+']'} {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<")
+        ss_log.debug(f">>> {'['+str(index)+']'} {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<")
         return fastest

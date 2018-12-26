@@ -11,6 +11,16 @@ class ServerConfig:
         self.__dict__.update(kwargs)
         self.local_port = 1080
 
+    def to_flags(self):
+        flags = [
+            '-s', str(self.server),
+            '-p', str(self.server_port),
+            '-l', str(self.local_port),
+            '-k', str(self.password),
+            '-m', str(self.method),
+        ]
+        return ' '.join(flags)
+
     @property
     def local_port(self):
         return self._info['local_port']
@@ -36,7 +46,7 @@ class ConfigLoader:
         if not config_path.is_file():
             raise Exception(f"Invalid json config file: {config_path}")
 
-        ss_log.info("Loading config file from {}".format(config_path))
+        ss_log.debug("Loading config file from {}".format(config_path))
         with config_path.open('rt') as f:
             try:
                 self._conf_dict = json.load(f)
