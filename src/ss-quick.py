@@ -8,15 +8,14 @@ from logger import ss_log
 
 
 def main(args):
-    config_loader = ConfigLoader(args.config_file)
-    configs = config_loader.get_server_configs()
+    configs = ConfigLoader(args.config_file).get_server_configs()
 
     if args.n is not None:
         index = args.n
         if index not in range(len(configs)):
             ss_log.info(f"please choose a config from 1-{len(configs)}")
             return
-        config = configs[index]
+        config = configs[index - 1]
     else:
         config = LatencyTester(configs).get_fastest()
         if not config:
