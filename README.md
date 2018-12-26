@@ -1,6 +1,6 @@
 # ss-quick
 
-ss-quick 是一个为 `ss-local` 自动加载 `gui-config.json` 的工具。
+ss-quick 是一个为 [`ss-local`](https://github.com/shadowsocks/shadowsocks-libev) 自动加载 `gui-config.json` 的工具。
 
 它通过测试多个服务器的连接延迟，自动选择延迟最低的服务器，并输出为 `ss-local` 的选项。
 
@@ -31,6 +31,8 @@ ss-quick -c /path/to/gui-config.json
 12-26 21:42:39 INFO: [3] 89.28 ms            test4.host:test3线路
 12-26 21:42:39 INFO: [2] server not know     test3.host:test2线路
 12-26 22:03:14 INFO: [4] timeout             test5.host:test4线路
+
+-s test3.host -p 1234 -k passwwwwwd -m aes-256-cfb
 ```
 
 直接输出 flags 作为 ss-local 的启动参数：
