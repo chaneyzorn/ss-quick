@@ -73,7 +73,6 @@ class LatencyTester:
             return None
         ss_log.info(
             f"Test Finished, the lowest connection latency is:\n"
-            f">>> {'['+str(fastest.index)+']'} {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<\n"
-            + str(fastest)
+            f">>> {'['+str(fastest.index)+']'} {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<"
         )
         return fastest

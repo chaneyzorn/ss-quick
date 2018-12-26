@@ -1,7 +1,9 @@
 # ss-quick
 
 ss-quick 是一个为 `ss-local` 自动加载 `gui-config.json` 的工具。
+
 它通过测试多个服务器的连接延迟，自动选择延迟最低的服务器，并输出为 `ss-local` 的选项。
+
 你也可以直接指定要使用的服务器配置。
 
 # USAGE
