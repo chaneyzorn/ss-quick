@@ -1,7 +1,7 @@
 import asyncio
 import time
 import math
-from socket import socket, AF_INET, SOCK_STREAM, timeout, gaierror
+import socket
 
 from logger import ss_log
 
@@ -32,6 +32,16 @@ class LatencyTester:
 
                 writer.close()
                 await writer.wait_closed()
+            except asyncio.TimeoutError as e:
+                status = "timeout"
+            except socket.gaierror as e:
+                status = "server not know"
+            except OSError as e:
+                if e.errno == 101:
+                    status = "unreachable"
+                else:
+                    ss_log.exception(e)
+                    status = "test failed"
             except Exception as e:
                 ss_log.exception(e)
                 status = "test failed"
