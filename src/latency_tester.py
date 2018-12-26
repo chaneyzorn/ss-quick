@@ -16,8 +16,8 @@ class LatencyTester:
         return self.start_test_async()
 
     def start_test_async(self):
-        ss_log.debug(">>> Start Connection Latency Test")
-        width_1 = len(f'[{len(self.server_configs)}]')
+        ss_log.info(">>> Start Connection Latency Test")
+        width_1 = len(f'{len(self.server_configs)}')
         width_2 = max(len(item.server) for item in self.server_configs)
 
         async def connect_config_server(config):
@@ -50,13 +50,13 @@ class LatencyTester:
             config.status = status
             result = latency and f"{latency:.2f} ms" or status
 
-            ss_log.debug(
-                f"{'['+str(config.index)+']':>{width_1}} {result:<18} {config.server:>{width_2}}:{config.remarks}"
+            ss_log.info(
+                f"[{config.index:>{width_1}}] {result:<18} {config.server:>{width_2}}:{config.remarks}"
             )
 
         task_list = []
         for index, config in enumerate(self.server_configs):
-            config.index = index
+            config.index = index + 1
             task_list.append(
                 connect_config_server(config)
             )
@@ -69,9 +69,11 @@ class LatencyTester:
         rank = sorted(self.server_configs, key=lambda item: item.latency)
         fastest = rank[0]
         if fastest.status != "success":
-            ss_log.debug("None of configs is valid")
+            ss_log.info("None of configs is valid")
             return None
-        ss_log.debug(f">>> Test Finished, the lowest connection latency is:")
-        index = self.server_configs.index(fastest)
-        ss_log.debug(f">>> {'['+str(index)+']'} {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<")
+        ss_log.info(
+            f"Test Finished, the lowest connection latency is:\n"
+            f">>> {'['+str(fastest.index)+']'} {fastest.remarks} {fastest.server}: {fastest.latency:.2f} ms <<<\n"
+            + str(fastest)
+        )
         return fastest

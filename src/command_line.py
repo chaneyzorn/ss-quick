@@ -12,39 +12,8 @@ arg_parser.add_argument(
     '-n',
     action='store',
     type=int,
-    default=False,
-    help="choose (0-n)th config to start ss-local."
-)
-arg_parser.add_argument(
-    '--fastest',
-    action='store_true',
-    default=False,
-    help="start ss-local with the fastest one."
-)
-arg_parser.add_argument(
-    '-l', '--local-port',
-    action='store',
-    type=int,
-    default=1080,
-    help="port number of your local server."
-)
-arg_parser.add_argument(
-    '-d', '--daemon',
-    action='store_true',
-    default=False,
-    help="run in the background."
-)
-arg_parser.add_argument(
-    '--flags',
-    action='store_true',
-    default=False,
-    help="only print required flags of ss-local to stdout."
-)
-arg_parser.add_argument(
-    '-v', '--verbose',
-    action='store_true',
-    default=False,
-    help="make the operation more talkative."
+    default=None,
+    help="choose (1-n)th config to start ss-local."
 )
 
 args = arg_parser.parse_args()
