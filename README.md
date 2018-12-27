@@ -26,11 +26,11 @@ optional arguments:
 ss-quick -c /path/to/gui-config.json
 
 12-26 21:42:39 INFO: Loading config file from /path/to/gui-config.json
-12-26 21:42:39 INFO: >>> Start Connection Latency Test
-12-26 21:42:39 INFO: [1] unreachable         test1.host:test1线路
-12-26 21:42:39 INFO: [3] 89.28 ms            test4.host:test3线路
-12-26 21:42:39 INFO: [2] server not know     test3.host:test2线路
-12-26 22:03:14 INFO: [4] timeout             test5.host:test4线路
+12-26 21:42:39 INFO: Start Connection Latency Test
+[1] unreachable         test1.host:test1线路
+[2] server not know     test3.host:test2线路
+[3] 89.28 ms            test4.host:test3线路
+[4] timeout             test5.host:test4线路
 
 -s test3.host -p 1234 -k passwwwwwd -m aes-256-cfb
 ```
