@@ -1,3 +1,4 @@
+import base64
 import json
 from json import JSONDecodeError
 from pathlib import Path
@@ -18,6 +19,11 @@ class ServerConfig:
             '-m', str(self.method),
         ]
         return ' '.join(flags)
+
+    def to_uri(self):
+        info = f"{self.method}:{self.password}@{self.server}:{self.server_port}"
+        base64_info = base64.urlsafe_b64encode(info.encode()).decode()
+        return f"ss://{base64_info}#{self.remarks}"
 
     def __str__(self):
         info = ''
