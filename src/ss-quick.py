@@ -22,7 +22,10 @@ def main(args):
 
     ss_log.info(f"\n{config}")
     # print to stdout
-    print(config.to_flags())
+    if args.uri:
+        print(config.to_uri())
+    else:
+        print(config.to_flags())
 
 
 if __name__ == "__main__":
