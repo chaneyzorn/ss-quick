@@ -19,6 +19,7 @@ optional arguments:
   -c CONFIG_FILE, --config-file CONFIG_FILE
                         path to gui-config.json
   -n N                  choose (1-n)th config to start ss-local.
+  --uri                 print config in the form of uri to stdout.
 ```
 
 查看测试延迟：
@@ -43,6 +44,16 @@ ss-local -v -l 1080 `ss-quick -c /path/to/gui-config.json`
 选择第2个服务器：
 ```
 ss-local -v -l 1080 `ss-quick -c /path/to/gui-config.json -n2`
+```
+
+输出指定配置为 `ss://` 形式的 uri :
+```
+ss-quick -c /path/to/gui-config.json -n2 --uri
+```
+
+配合 [qrcode](https://github.com/lincolnloop/python-qrcode) 输出为二维码：
+```
+qr `ss-quick -c /path/to/gui-config.json --uri`
 ```
 
 # License
