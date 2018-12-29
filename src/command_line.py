@@ -15,6 +15,12 @@ arg_parser.add_argument(
     default=None,
     help="choose (1-n)th config to start ss-local."
 )
+arg_parser.add_argument(
+    '--uri',
+    action='store_true',
+    default=False,
+    help="print config in the form of uri to stdout."
+)
 
 args = arg_parser.parse_args()
 
