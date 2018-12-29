@@ -22,6 +22,7 @@ class ServerConfig:
         return ' '.join(flags)
 
     def to_uri(self):
+        # https://shadowsocks.org/en/config/quick-guide.html
         info = f"{self.method}:{self.password}@{self.server}:{self.server_port}"
         base64_info = base64.urlsafe_b64encode(info.encode()).decode()
         return f"ss://{base64_info}#{quote(self.remarks)}"
