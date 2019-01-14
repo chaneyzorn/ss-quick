@@ -6,7 +6,7 @@ ss-quick 是一个为 [`ss-local`](https://github.com/shadowsocks/shadowsocks-li
 
 你也可以直接指定要使用的服务器配置。
 
-![screenshot](screenshot.svg)
+![screenshot](screenshot.gif)
 
 # USAGE
 
