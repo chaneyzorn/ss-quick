@@ -6,6 +6,8 @@ ss-quick 是一个为 [`ss-local`](https://github.com/shadowsocks/shadowsocks-li
 
 你也可以直接指定要使用的服务器配置。
 
+![screenshot](screenshot.svg)
+
 # USAGE
 
 ```
@@ -20,6 +22,7 @@ optional arguments:
                         path to gui-config.json
   -n N                  choose (1-n)th config to start ss-local.
   --uri                 print config in the form of uri to stdout.
+  --debug               print debug information.
 ```
 
 查看测试延迟：
