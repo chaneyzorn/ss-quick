@@ -21,6 +21,12 @@ arg_parser.add_argument(
     default=False,
     help="print config in the form of uri to stdout."
 )
+arg_parser.add_argument(
+    '--debug',
+    action='store_true',
+    default=False,
+    help="print debug information."
+)
 
 args = arg_parser.parse_args()
 

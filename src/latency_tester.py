@@ -2,7 +2,7 @@ import asyncio
 import sys
 import time
 import math
-import socket
+from traceback import format_exception
 
 from logger import ss_log
 
@@ -20,8 +20,11 @@ class LatencyTester:
         self.write = sys.stderr.write
         self.flush = sys.stderr.flush
 
-    def get_fastest(self):
-        return asyncio.run(self.start_test_async())
+        self.exception_tb = []
+
+    def get_fastest(self, debug):
+        asyncio.run(self.start_test_async())
+        return self.report_result(debug)
 
     async def connect_test(self, config):
         start = time.time()
@@ -35,18 +38,10 @@ class LatencyTester:
 
             writer.close()
             await writer.wait_closed()
-        except asyncio.TimeoutError as e:
+        except asyncio.TimeoutError:
             status = "timeout"
-        except socket.gaierror as e:
-            status = "server not know"
-        except OSError as e:
-            if e.errno == 101:
-                status = "unreachable"
-            else:
-                ss_log.exception(e)
-                status = "test failed"
         except Exception as e:
-            ss_log.exception(e)
+            self.exception_tb.append((config, e))
             status = "test failed"
 
         config.latency = latency or math.inf
@@ -69,6 +64,28 @@ class LatencyTester:
 
         await asyncio.gather(*task_list)
 
+    def _refresh_report(self, config, result):
+        line_count = self.server_count - config.index
+        self.write(f"\033[{line_count}A" + "\r")
+        self.write(f"[{config.index + 1:>{self.max_index_len}}] {result:<18} ")
+        self.write(f"\033[{line_count}B" + "\r")
+        self.flush()
+
+    def _report_exception(self):
+        if not self.exception_tb:
+            return
+
+        report = ["The following exception occurred during testing:\n"]
+        for config, e in self.exception_tb:
+            report.append(f"\n[{config.index + 1}] {config.remarks} {config.server}\n")
+            report += format_exception(e.__class__, e, e.__traceback__)  # sys.exc_info()
+        ss_log.info(''.join(report))
+
+    def report_result(self, debug):
+        self.write("\n")
+        if debug:
+            self._report_exception()
+
         rank = sorted(self.server_configs, key=lambda item: item.latency)
         fastest = rank[0]
         if fastest.status != "success":
@@ -80,10 +97,3 @@ class LatencyTester:
             f"{fastest.server}: {fastest.latency:.2f} ms"
         )
         return fastest
-
-    def _refresh_report(self, config, result):
-        line_count = self.server_count - config.index
-        self.write(f"\033[{line_count}A" + "\r")
-        self.write(f"[{config.index + 1:>{self.max_index_len}}] {result:<18} ")
-        self.write(f"\033[{line_count}B" + "\r")
-        self.flush()

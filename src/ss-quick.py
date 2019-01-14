@@ -16,7 +16,7 @@ def main(args):
             return
         config = configs[args.n - 1]
     else:
-        config = LatencyTester(configs).get_fastest()
+        config = LatencyTester(configs).get_fastest(args.debug)
         if not config:
             return
 
