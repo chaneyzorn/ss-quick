@@ -59,5 +59,9 @@ ss-quick -c /path/to/gui-config.json -n2 --uri
 qr `ss-quick -c /path/to/gui-config.json --uri`
 ```
 
+# BUG
+
+1. 如果线路列表过长，滚出终端显示范围的部分，测试延迟的结果将不会得到刷新。
+
 # License
 MIT
