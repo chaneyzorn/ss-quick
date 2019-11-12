@@ -1,3 +1,7 @@
-*__pycache__*
 venv
 .idea
+buid
+dist
+*.egg-info
+*__pycache__*
+*.pyc
