@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ss-quick",
-    version="0.0.1",
+    version="0.0.2",
     author="ChaneyZorn",
     author_email="chaneyzorn@gmail.com",
     url="https://github.com/Campanula/ss-quick",

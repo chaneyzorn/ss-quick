@@ -7,7 +7,11 @@ from ss_quick.command_line import args
 from ss_quick.logger import ss_log
 
 
-def main(args):
+def main():
+    cli(args)
+
+
+def cli(args):
     configs = ConfigLoader(args.config_file).get_server_configs()
 
     if args.n is not None:
@@ -29,4 +33,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    main(args)
+    main()
