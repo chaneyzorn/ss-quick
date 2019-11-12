@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from gui_config_loader import ConfigLoader
-from latency_tester import LatencyTester
-from command_line import args
+from ss_quick.gui_config_loader import ConfigLoader
+from ss_quick.latency_tester import LatencyTester
+from ss_quick.command_line import args
 
-from logger import ss_log
+from ss_quick.logger import ss_log
 
 
 def main(args):

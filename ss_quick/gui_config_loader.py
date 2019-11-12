@@ -4,7 +4,7 @@ from json import JSONDecodeError
 from pathlib import Path
 from urllib.parse import quote
 
-from logger import ss_log
+from ss_quick.logger import ss_log
 
 
 class ServerConfig:

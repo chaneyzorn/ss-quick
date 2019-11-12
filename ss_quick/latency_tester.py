@@ -4,7 +4,7 @@ import time
 import math
 from traceback import format_exception
 
-from logger import ss_log
+from ss_quick.logger import ss_log
 
 
 class LatencyTester:
