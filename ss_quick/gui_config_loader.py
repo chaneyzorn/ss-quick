@@ -43,7 +43,7 @@ class ConfigLoader:
         if not config_path.is_file():
             raise Exception(f"Invalid json config file: {config_path}")
 
-        ss_log.info("Loading config file from {}".format(config_path))
+        ss_log.info(f"Loading config file from {config_path}")
         with config_path.open('rt') as f:
             try:
                 self._conf_dict = json.load(f)
